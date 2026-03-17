@@ -38,6 +38,7 @@ class Subscription extends \yii\db\ActiveRecord
             [['author_id'], 'integer'],
             [['phone'], 'string', 'max' => 20],
             [['phone'], 'unique', 'targetAttribute' => ['author_id', 'phone'], 'message' => 'Вы уже подписаны на этого автора.'],
+            [['phone'], 'match', 'pattern' => '/^\+?[0-9]{10,15}$/', 'message' => 'Некорректный номер телефона.'],
         ];
     }
 

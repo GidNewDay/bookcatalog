@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use common\models\Subscription;
 
 /**
  * AuthorController implements the CRUD actions for Author model.
@@ -26,7 +27,7 @@ class AuthorController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view'], // публичные действия
+                        'actions' => ['index', 'view', 'subscribe'], // публичные действия
                         'roles' => ['?', '@'], // разрешено всем: гости (?) и авторизованные (@)
                     ],
                     [
@@ -144,5 +145,27 @@ class AuthorController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionSubscribe($id)
+    {
+        $author = $this->findModel($id);
+
+        $subscription = new Subscription();
+        $subscription->author_id = $author->id;
+
+        if ($subscription->load(Yii::$app->request->post()) && $subscription->save()) {
+            Yii::$app->session->setFlash('success', 'Вы успешно подписались на автора ' . $author->full_name);
+        } else {
+            // Если ошибки валидации – выведем их в флеш-сообщении (можно и подробнее)
+            $errors = $subscription->getErrors();
+            if (!empty($errors)) {
+                Yii::$app->session->setFlash('error', 'Ошибка подписки: ' . implode(', ', $errors['phone'] ?? ['Неизвестная ошибка']));
+            } else {
+                Yii::$app->session->setFlash('error', 'Не удалось оформить подписку.');
+            }
+        }
+
+        return $this->redirect(['view', 'id' => $author->id]);
     }
 }

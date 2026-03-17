@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\widgets\ListView;
+use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var common\models\Author $model */
@@ -27,4 +28,17 @@ $this->params['breadcrumbs'][] = $this->title;
         },
         'summary' => false,
     ]) ?>
+</div>
+
+<div class="subscription-form">
+    <h3>Подписаться на новые книги автора</h3>
+    <?php $form = ActiveForm::begin(['action' => ['author/subscribe', 'id' => $model->id], 'method' => 'post']); ?>
+
+    <?= $form->field(new \common\models\Subscription(), 'phone')->textInput(['placeholder' => '+7XXXXXXXXXX'])->label('Ваш номер телефона') ?>
+
+    <div class="form-group">
+        <?= Html::submitButton('Подписаться', ['class' => 'btn btn-success']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
 </div>
