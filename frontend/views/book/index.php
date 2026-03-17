@@ -10,7 +10,7 @@ use yii\grid\GridView;
 /** @var common\models\search\BookSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Books';
+$this->title = 'Книги';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="book-index">
@@ -34,11 +34,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'year',
             'description:ntext',
             'isbn',
-            //'cover_image',
+            [
+                'attribute' => 'cover_image',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    if ($model->cover_image) {
+                        return Html::img('/' . $model->cover_image, ['style' => 'max-width:100px; max-height:100px;']);
+                    }
+                    return '<span class="text-muted">Нет фото</span>';
+                },
+            ],
             //'created_at',
             //'updated_at',
             [
-                'class' => ActionColumn::className(),
+                'class' => ActionColumn::class,
                 'urlCreator' => function ($action, Book $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                  }

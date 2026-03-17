@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\widgets\ListView;
 
 /** @var yii\web\View $this */
 /** @var common\models\Author $model */
@@ -11,29 +12,19 @@ $this->params['breadcrumbs'][] = ['label' => 'Authors', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
+
 <div class="author-view">
+    <h1><?= Html::encode($model->full_name) ?></h1>
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'full_name',
-            'created_at',
-            'updated_at',
-        ],
+    <h3>Книги этого автора:</h3>
+    <?= ListView::widget([
+        'dataProvider' => new \yii\data\ActiveDataProvider([
+            'query' => $model->getBooks(),
+            'pagination' => ['pageSize' => 10],
+        ]),
+        'itemView' => function ($book) {
+            return Html::a($book->title, ['book/view', 'id' => $book->id]);
+        },
+        'summary' => false,
     ]) ?>
-
 </div>

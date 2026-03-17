@@ -26,7 +26,13 @@ class AuthorController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['user'], // доступ только авторизованным с ролью user
+                        'actions' => ['index', 'view'], // публичные действия
+                        'roles' => ['?', '@'], // разрешено всем: гости (?) и авторизованные (@)
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update', 'delete'], // действия управления
+                        'roles' => ['user'], // только для user
                     ],
                 ],
             ],

@@ -28,7 +28,13 @@ class BookController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['user'], // только для пользователей с ролью user
+                        'actions' => ['index', 'view'],
+                        'roles' => ['?', '@'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update', 'delete'],
+                        'roles' => ['user'],
                     ],
                 ],
             ],

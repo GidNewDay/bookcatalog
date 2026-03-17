@@ -10,7 +10,7 @@ use yii\grid\GridView;
 /** @var common\models\search\AuthorSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Authors';
+$this->title = 'Авторы';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="author-index">
@@ -27,14 +27,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            //['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'full_name',
+            [
+                'attribute' => 'full_name',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return Html::a($model->full_name, ['author/view', 'id' => $model->id]);
+                },
+            ],
             'created_at',
             'updated_at',
             [
-                'class' => ActionColumn::className(),
+                'class' => ActionColumn::class,
                 'urlCreator' => function ($action, Author $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                  }

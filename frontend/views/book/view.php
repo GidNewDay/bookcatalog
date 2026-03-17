@@ -13,37 +13,36 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="book-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <?php if ($model->cover_image): ?>
+        <div class="book-cover">
+            <?= Html::img('/' . $model->cover_image, ['style' => 'max-width:300px;']) ?>
+        </div>
+    <?php endif; ?>
 
-    <?php 
-    if ($model->cover_image) {
-        echo Html::img('/' . $model->cover_image, ['style' => 'max-width:300px;']);
-    }
-    ?>
-    
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+    <div class="book-details">
+        <h1><?= Html::encode($model->title) ?></h1>
+        <p><strong>Год выпуска:</strong> <?= $model->year ?></p>
+        <p><strong>ISBN:</strong> <?= Html::encode($model->isbn) ?></p>
+        <p><strong>Описание:</strong><br> <?= nl2br(Html::encode($model->description)) ?></p>
+        <p><strong>Авторы:</strong></p>
+        <ul>
+            <?php foreach ($model->authors as $author): ?>
+                <li><?= Html::a($author->full_name, ['author/view', 'id' => $author->id]) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'title',
-            'year',
-            'description:ntext',
-            'isbn',
-            'cover_image',
-            'created_at',
-            'updated_at',
-        ],
-    ]) ?>
+    <?php if (!Yii::$app->user->isGuest && Yii::$app->user->can('user')): ?>
+        <p>
+            <?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => 'Вы уверены, что хотите удалить эту книгу?',
+                    'method' => 'post',
+                ],
+            ]) ?>
+        </p>
+    <?php endif; ?>
 
 </div>
