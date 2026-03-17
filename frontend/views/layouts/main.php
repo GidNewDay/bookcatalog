@@ -38,6 +38,7 @@ AppAsset::register($this);
         ['label' => 'Главная', 'url' => ['/site/index']],
         ['label' => 'Книги', 'url' => ['/book/index']],
         ['label' => 'Авторы', 'url' => ['/author/index']],
+        ['label' => 'Топ авторов', 'url' => ['/report/top-authors']],
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
