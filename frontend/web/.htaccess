@@ -1,0 +1,6 @@
+RewriteEngine on
+# Если папка или файл существуют, обращаемся к ним напрямую
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# Иначе отправляем всё на index.php
+RewriteRule . index.php
