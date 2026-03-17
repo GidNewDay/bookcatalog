@@ -44,5 +44,10 @@ return [
             ],
         ],
     ],
+    'modules' => [
+        'user' => [
+            'class' => 'frontend\modules\user\Module', // или используйте встроенный модуль Yii2
+        ],
+    ],
     'params' => $params,
 ];
