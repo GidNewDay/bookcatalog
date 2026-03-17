@@ -40,9 +40,10 @@ class Book extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'year'], 'required'],
-            [['year'], 'integer', 'max' => 2026],
+            [['year'], 'integer', 'max' => date('Y')],
             [['title'], 'string', 'max' => 255],
             [['isbn'], 'string', 'max' => 20],
+            [['isbn'], 'unique', 'message' => 'Такой ISBN уже был использован.'],
             [['cover_image'], 'string', 'max' => 255],
             [['description'], 'string'],
             [['authorIds'], 'safe'], // разрешаем массив

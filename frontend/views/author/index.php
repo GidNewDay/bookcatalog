@@ -17,11 +17,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Author', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <?php if (!Yii::$app->user->isGuest && Yii::$app->user->can('user')): ?>
+        <p>
+            <?= Html::a('Создать автора', ['create'], ['class' => 'btn btn-success']) ?>
+        </p>
+    <?php endif; ?>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+
+
+    <?php // echo $this->render('_search', ['model' => $searchModel]); 
+    ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -37,13 +42,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::a($model->full_name, ['author/view', 'id' => $model->id]);
                 },
             ],
-            'created_at',
-            'updated_at',
+            // 'created_at',
+            // 'updated_at',
             [
                 'class' => ActionColumn::class,
+                // 'visible' => !Yii::$app->user->isGuest,
                 'urlCreator' => function ($action, Author $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                }
             ],
         ],
     ]); ?>

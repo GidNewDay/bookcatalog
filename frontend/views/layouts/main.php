@@ -75,7 +75,7 @@ AppAsset::register($this);
 <footer class="footer mt-auto py-3 text-muted">
     <div class="container">
         <p class="float-start">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
-        <p class="float-end">&copy; Каталог книг <?= date('Y') ?></p>
+        <p class="float-end"> Navruz Madibragimov</p>
     </div>
 </footer>
 

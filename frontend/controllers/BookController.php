@@ -139,11 +139,14 @@ class BookController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $oldCover = $model->cover_image; // запоминаем старую обложку
 
         if ($model->load(Yii::$app->request->post())) {
             $model->coverFile = UploadedFile::getInstance($model, 'coverFile');
 
+            // Сначала валидация
             if ($model->validate()) {
+                // Обработка нового файла, если он загружен
                 if ($model->coverFile) {
                     $ext = $model->coverFile->extension;
                     $fileName = 'uploads/' . Yii::$app->security->generateRandomString() . '.' . $ext;
@@ -153,10 +156,7 @@ class BookController extends Controller
                         mkdir($uploadDir, 0777, true);
                     }
                     if ($model->coverFile->saveAs($path)) {
-                        // Удаляем старый файл, если есть
-                        if ($model->cover_image && file_exists(Yii::getAlias('@frontend/web/' . $model->cover_image))) {
-                            unlink(Yii::getAlias('@frontend/web/' . $model->cover_image));
-                        }
+                        // Сохраняем новый путь в модель
                         $model->cover_image = $fileName;
                     } else {
                         Yii::$app->session->setFlash('error', 'Не удалось сохранить файл.');
@@ -164,7 +164,14 @@ class BookController extends Controller
                     }
                 }
 
+                // Сохраняем модель (без повторной валидации)
                 if ($model->save(false)) {
+                    // Если была загружена новая обложка и старый файл существовал – удаляем его
+                    if ($model->coverFile && $oldCover && file_exists(Yii::getAlias('@frontend/web/' . $oldCover))) {
+                        unlink(Yii::getAlias('@frontend/web/' . $oldCover));
+                    }
+
+                    // Обновляем связи с авторами
                     $model->unlinkAll('authors', true);
                     if (!empty($model->authorIds)) {
                         foreach ($model->authorIds as $authorId) {
