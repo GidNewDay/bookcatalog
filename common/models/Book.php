@@ -1,9 +1,9 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
-
+use yii\web\UploadedFile;
 /**
  * This is the model class for table "books".
  *
@@ -21,6 +21,7 @@ use Yii;
 class Book extends \yii\db\ActiveRecord
 {
 
+    public $authorIds;
 
     /**
      * {@inheritdoc}
@@ -30,6 +31,8 @@ class Book extends \yii\db\ActiveRecord
         return 'books';
     }
 
+    public $coverFile; // для загрузки файла
+    
     /**
      * {@inheritdoc}
      */
@@ -42,6 +45,8 @@ class Book extends \yii\db\ActiveRecord
             [['isbn'], 'string', 'max' => 20],
             [['cover_image'], 'string', 'max' => 255],
             [['description'], 'string'],
+            [['authorIds'], 'safe'], // разрешаем массив
+            [['coverFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'maxSize' => 10 * 1024 * 1024], // 10 MB
         ];
     }
 
@@ -71,15 +76,5 @@ class Book extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Author::class, ['id' => 'author_id'])->viaTable('{{%book_author}}', ['book_id' => 'id']);
     }
-
-    /**
-     * Gets query for [[BookAuthors]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    // public function getBookAuthors()
-    // {
-    //     return $this->hasMany(BookAuthor::class, ['book_id' => 'id']);
-    // }
 
 }
